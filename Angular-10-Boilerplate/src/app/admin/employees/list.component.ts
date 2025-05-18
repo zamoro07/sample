@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Employee } from '../_models/employee.model';
+import { Employee } from 'src/app/_models/employee.model';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AddEmployeeModalComponent } from './add-employee-modal/add-employee-modal.component';
 
 @Component({
   selector: 'app-employee-list',
@@ -10,7 +12,7 @@ export class ListComponent implements OnInit {
   employees: Employee[] = [];
   currentUser = { role: 'Admin' };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private modalService: NgbModal) {}
 
   ngOnInit() {
     this.http.get<Employee[]>('/employees').subscribe((res) => {
@@ -45,6 +47,13 @@ export class ListComponent implements OnInit {
   }
 
   add() {
-    console.log('Adding new employee');
-  }
+  const modalRef = this.modalService.open(AddEmployeeModalComponent, { size: 'lg' });
+
+  modalRef.result.then((newEmployee) => {
+    if (newEmployee) {
+      console.log('Returned employee from modal:', newEmployee);
+      this.employees.push(newEmployee);
+    }
+  }).catch(() => {});
+}
 }

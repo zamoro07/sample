@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AddEditComponent } from './add-edit.component';
 
 @Component({
   selector: 'app-request-list',
@@ -16,7 +18,7 @@ export class ListComponent implements OnInit {
 
   currentUser = { role: 'Admin' };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private modalService: NgbModal) {}
 
   ngOnInit() {
     this.http.get<any[]>('/requests').subscribe((res) => {
@@ -29,7 +31,18 @@ export class ListComponent implements OnInit {
   }
 
   edit(id: number) {
-    console.log('Edit request ID:', id);
+    const request = this.requests.find(r => r.id === id);
+    if (!request) return;
+
+    const modalRef = this.modalService.open(AddEditComponent, { size: 'lg' });
+    modalRef.componentInstance.title = 'Edit Request';
+    modalRef.componentInstance.id = id;
+    modalRef.componentInstance.request = { ...request };
+
+    modalRef.result.then((updatedRequest) => {
+      const index = this.requests.findIndex(r => r.id === id);
+      if (index !== -1) this.requests[index] = updatedRequest;
+    }).catch(() => {});
   }
 
   delete(id: number) {
@@ -39,6 +52,26 @@ export class ListComponent implements OnInit {
   }
 
   add() {
-    console.log('Add new request');
-  }
+  console.log('Add Request button clicked');
+
+  const modalRef = this.modalService.open(AddEditComponent, { size: 'lg' });
+  modalRef.componentInstance.title = 'Add Request';
+  modalRef.componentInstance.request = {
+    type: '',
+    employee: { employeeId: '' },
+    requestItems: [],
+    status: 'Pending'
+  };
+
+  modalRef.result.then((newRequest) => {
+    const newId = this.requests.length
+      ? Math.max(...this.requests.map(r => r.id)) + 1
+      : 1;
+
+    this.requests.push({ ...newRequest, id: newId });
+    console.log('New request added:', newRequest);
+  }).catch(() => {
+    console.log('Add Request modal closed or cancelled.');
+  });
+}
 }

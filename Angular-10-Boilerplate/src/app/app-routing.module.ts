@@ -6,10 +6,10 @@ import { AuthGuard } from './_helpers';
 import { Role } from './_models';
 
 // List components
-import { ListComponent as EmployeeList } from './employees/list.component';
-import { ListComponent as DepartmentList } from './departments/list.component';
-import { ListComponent as RequestList } from './requests/list.component';
-import { ListComponent as WorkflowList } from './workflows/list.component';
+import { ListComponent as EmployeeList} from './admin/employees/list.component';
+import { ListComponent as DepartmentList } from './admin/departments/list.component';
+import { ListComponent as RequestList } from './admin/requests/list.component';
+import { ListComponent as WorkflowList } from './admin/workflows/list.component';
 import { ListComponent as AccountList } from './admin/accounts/list.component';
 // Layout with subnav
 import { LayoutComponent } from './admin/layout.component';

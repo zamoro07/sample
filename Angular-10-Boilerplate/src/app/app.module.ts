@@ -2,6 +2,7 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Routing
 import { AppRoutingModule } from './app-routing.module';
@@ -16,12 +17,11 @@ import { AlertComponent } from './_components';
 import { HomeComponent } from './home';
 
 // Admin Feature Components (ONLY if not lazy-loaded)
-import { ListComponent as EmployeeList } from './employees/list.component';
-import { ListComponent as DepartmentList } from './departments/list.component';
-import { ListComponent as RequestList } from './requests/list.component';
-import { ListComponent as WorkflowList } from './workflows/list.component';
-
-
+import { ListComponent as EmployeeList} from './admin/employees/list.component';
+import { ListComponent as DepartmentList } from './admin/departments/list.component';
+import { ListComponent as RequestList } from './admin/requests/list.component';
+import { ListComponent as WorkflowList } from './admin/workflows/list.component';
+import { AddEmployeeModalComponent } from './admin/employees/add-employee-modal/add-employee-modal.component';
 
 @NgModule({
   declarations: [
@@ -31,9 +31,11 @@ import { ListComponent as WorkflowList } from './workflows/list.component';
     EmployeeList,
     DepartmentList,
     RequestList,
-    WorkflowList
+    WorkflowList,
+    AddEmployeeModalComponent
   ],
   imports: [
+    NgbModule,
     BrowserModule,
     ReactiveFormsModule,
     FormsModule,

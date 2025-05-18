@@ -1,31 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-request-add-edit',
   templateUrl: './add-edit.component.html'
 })
-export class AddEditComponent implements OnInit {
-  id: number | null = null;
-  request: {
+export class AddEditComponent {
+  @Input() id: number | null = null;
+
+  @Input() request: {
     type: string;
+    employee: { employeeId: string; email: string; role: string } | null;
     items: { name: string; quantity: number }[];
+    status?: string;
   } = {
-    type: 'Equipment',
-    items: []
+    type: '',
+    employee: null,
+    items: [{ name: '', quantity: 1 }],
+    status: 'Pending'
   };
 
+  @Input() title: string = 'Add Request';
   errorMessage = '';
 
+  employees = [
+    { employeeId: 'EMP001', email: 'admin@example.com', role: 'Admin User' },
+    { employeeId: 'EMP002', email: 'user@example.com', role: 'Normal User' }
+  ];
+
+  constructor(public activeModal: NgbActiveModal) {}
+
   ngOnInit() {
-    if (this.id) {
-      // Sample edit data
-      this.request = {
-        type: 'Equipment',
-        items: [
-          { name: 'Printer', quantity: 1 },
-          { name: 'Ink', quantity: 4 }
-        ]
-      };
+    if (!this.request.items || this.request.items.length === 0) {
+      this.request.items = [{ name: '', quantity: 1 }];
     }
   }
 
@@ -38,15 +45,14 @@ export class AddEditComponent implements OnInit {
   }
 
   save() {
-    if (!this.request.type || this.request.items.length === 0) {
+    if (!this.request.type || !this.request.employee || this.request.items.length === 0) {
       this.errorMessage = 'Please fill out all fields and add at least one item.';
       return;
     }
-
-    console.log('Saved request:', this.request);
+    this.activeModal.close(this.request);
   }
 
   cancel() {
-    console.log('Cancelled request operation');
+    this.activeModal.dismiss();
   }
 }
